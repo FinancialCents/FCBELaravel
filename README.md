@@ -1,66 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Overview
+As part of your daily tasks at Financial Cents, you will create features that require the following skills:
+1. Being proficient in designing DB schemas and queries
+2. Implementing reliable software architecture principles including testability, scalability, fault tolerance and high performance 
+3. Building with cybersecurity as a top priority
+4. Building maintainable code with low complexity
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This challenge is designed to resemble a realistic task where these skills are tested. 
+Please read the instructions carefully and reach out to us with any questions. There is no
+time limit on completing the challenge and there are no restrictions on which resources you can use.
 
-## About Laravel
+# Your Task
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Scenario
+Our customers are asking us to build an invoice listing page that shows all the invoices they sent to their clients.
+The main reason they want this is that their current billing platform does not offer an easy way to get all
+invoices across their client base nor does it allow them to filter the list to find unpaid or pending invoices.
+They end up having to download each client's list of invoices and combine them in an Excel sheet to run their reports. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The data for these invoices reside in their billing software, which provides a simple API that includes listing
+invoices in chronological order. However, their API does not allow for any type of filtering or sorting. Their
+API is also known to have intermittent networking issues that normally last a few minutes. Their API documentation
+and other information can be found in [docs/billing_api](docs/billing_api.md).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Task
+You are tasked with creating a solution to pull invoices from the third-party API and storing them in a local database.
+In addition, our frontend team needs an internal API to list, sort and filter invoices for the authenticated user. Users
+should be able to filter by client name, due date and invoice status (paid, pending, past due, void). 
 
-## Learning Laravel
+It is not your responsibility to create the frontend for this task. You are only expected to write the code
+for importing the invoices and provide internal API endpoints to list and view an invoice.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Considerations
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Authorization
+- Only authenticated users can access the listing page.
+- Each user can only access invoices that belong to their account.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Database
+- Create a MySQL database for this task.
+- You will need tables for clients and invoices.
+- Optimize tables by adding indexes to support filtering by owner, client name, invoice status and invoice due date. 
 
-## Laravel Sponsors
+### Internal API Endpoints
+Our front end engineers need an endpoint to retrieve invoices:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Listing Invoices**
+Lists invoices sorted by due_date in descending order
+```
+GET /api/invoices
+Accepts the following filtering parameters:
+- client_name: string (optional).
+- status: string (optional). one of pending, paid, past due or void (optional)
+- due_date: string (optional). Formatted as Y-m-d
+- order_by: string (optional. Default: due_date). One of client_name, status or due_date.
+- order_dir: string (optional. Default: desc). One of asc or desc.
+```
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Commands
+Create a command to initiate pulling data from the billing API for all users. The command should simply iterate over
+the users table and dispatch a job for each user. The job is responsible for pulling invoices from the billing API.
