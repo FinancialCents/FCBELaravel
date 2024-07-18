@@ -9,7 +9,7 @@ This challenge is designed to resemble a realistic task where these skills are t
 Please read the instructions carefully and reach out to us with any questions. There is no
 time limit on completing the challenge and there are no restrictions on which resources you can use.
 
-# Your Task
+# The Challenge
 
 ## Scenario
 Our customers are asking us to build an invoice listing page that shows all the invoices they sent to their clients.
@@ -28,7 +28,7 @@ In addition, our frontend team needs an internal API to list, sort and filter in
 should be able to filter by client name, due date and invoice status (paid, pending, past due, void). 
 
 It is not your responsibility to create the frontend for this task. You are only expected to write the code
-for importing the invoices and provide internal API endpoints to list and view an invoice.
+for importing the invoices from the billing software and provide an internal API endpoint to list and filter an invoices.
 
 ## Considerations
 
@@ -39,23 +39,36 @@ for importing the invoices and provide internal API endpoints to list and view a
 ### Database
 - Create a MySQL database for this task.
 - You will need tables for clients and invoices.
-- Optimize tables by adding indexes to support filtering by owner, client name, invoice status and invoice due date. 
+- Optimize tables by adding indexes to support filtering. 
+- Seed the database with user records but rely on the API to fill the invoices and clients tables.
 
 ### Internal API Endpoints
 Our front end engineers need an endpoint to retrieve invoices:
 
 **Listing Invoices**
-Lists invoices sorted by due_date in descending order
+
+Lists invoices sorted by due_date in descending order by default.
 ```
 GET /api/invoices
+
 Accepts the following filtering parameters:
 - client_name: string (optional).
 - status: string (optional). one of pending, paid, past due or void (optional)
 - due_date: string (optional). Formatted as Y-m-d
 - order_by: string (optional. Default: due_date). One of client_name, status or due_date.
 - order_dir: string (optional. Default: desc). One of asc or desc.
+
+Returns a paginated JSON response about the invoice along with the related client.
 ```
 
 ### Commands
-Create a command to initiate pulling data from the billing API for all users. The command should simply iterate over
+Create a command to retrieve data from the billing API for all users. The command should simply iterate over
 the users table and dispatch a job for each user. The job is responsible for pulling invoices from the billing API.
+
+### Tests
+Write tests for your code that verify error handling and authorization. There is no need to unit test everything. Focus
+your tests on guaranteeing that pulling data from the third-party API works and that your internal API returns appropriate
+responses. For example, test that accessing `/api/invoices/` should return 401 if you are not authenticated.
+
+# Submission
+You're expected to publish your code on a Github repository and share the link.
