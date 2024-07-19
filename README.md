@@ -46,6 +46,7 @@ for importing the invoices from the billing software and provide an internal API
 - You will need tables for clients and invoices.
 - Optimize tables by adding indexes to support filtering. 
 - Seed the database with user records but rely on the API to fill the `invoices` and `clients` tables.
+  - Create 500 user records for testing. 
 
 ### Internal API Endpoints
 Our front end engineers need an endpoint to retrieve invoices from our database. Please create this endpoint along 
@@ -92,14 +93,16 @@ ClientObject: {
 
 ### Commands
 Create a command to retrieve data from the billing API for all users. The command should simply iterate over
-the users table and dispatch a job for each user. The job is responsible for pulling invoices from the billing API.
+the users table and dispatch a job for each user. The job is responsible for pulling **all** invoices from the billing API.
 
-Schedule the job to automatically run every hour.
+Schedule the command to automatically run every hour.
 
 We recommend using Laravel's Http class to make calls to the third-party API as it offers an easy way
 to mock and test responses. 
 
 Please make sure that any jobs are fault-tolerant, retry requests appropriately and report failures where necessary.
+It's important to consider scalability when designing both command and job with the intention to support thousands
+of users and millions of invoices.
 
 ### Tests
 Write tests for your code that verify error handling and authorization. There is no need to unit test everything. Focus
