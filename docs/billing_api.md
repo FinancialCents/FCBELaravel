@@ -2,25 +2,49 @@
 
 The billing API provides a single endpoint to access invoices given a user ID.
 
-Base URL: `mock-billing-api.financial-cents.com`
+Base URL: `https://mock-billing-api.financial-cents.com`
 
 **List Invoices**
-```shell
+```
 GET /api/v1/user/{user_id}/invoices
 
-Parameters: {user_id}: integer, should match the user_id in the users table on your local database.
+Parameters: 
+ - {user_id}: integer, see below for more info
 Query: none
 Response: JSON. Paginated list of invoices in the following format:
 {
   current_page: integer,
   next_page_url: ?string,
-  previous_page_url: ?string,
-  data: Array<{user_id: integer, client_name: string, due_date: Date, status: string, amount: integer}>
+  prev_page_url: ?string,
+  path: string,
+  per_page: integer,
+  to: integer,
+  total: 100,
+  data: Array<{id: integer, user: UserObject, client_name: string, due_date: Date, status: string, amount: integer}>
 }
-```
-Note: amount is in cents so 100 = $1 USD.
 
-### Authentication
+UserObject: {id: integer, name: string, email: string}
+```
+Note: `amount` is in cents so 100 = $1 USD.
+
+## Authentication
 For the purposes of this test, we will not be using any type of authentication.
 
+## Where do User IDs come from?
+The user id is any integer provided by your application. Since this is a mock API, it will generate invoices for any
+user id you provide. The only stipulation is that this ID should be an integer.
 
+## Error Codes
+The mock API could return the following errors:
+
+| HTTP Status Code | Description                                                                          |
+|------------------|--------------------------------------------------------------------------------------|
+| 500              | Server Error. Try again later.                                                       |
+| 503              | Service Unavailable. Try again later.                                                |
+| 429              | Too many requests. Use Retry-After in the response header to know how long to wait.  |
+| 422              | Validation error.                                                                    |
+| 400              | Bad Request. Inspect response message for info.                                      |
+
+## Rate Limiting
+This API allows up to 60 requests per minute. When rate limit is reached, a 429 HTTP status will be returned along
+with a Retry-After header that contains the number of seconds to wait before re-attempting the request.
