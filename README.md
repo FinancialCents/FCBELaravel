@@ -64,7 +64,7 @@ Accepts the following filtering parameters:
 - order_by: string (optional. Default: due_date). One of client_name, status or due_date.
 - order_dir: string (optional. Default: desc). One of asc or desc.
 
-Returns a paginated JSON response about the invoice along with the related client.
+Returns a paginated JSON response of invoices along with the related client.
 ```
 
 ### Commands
