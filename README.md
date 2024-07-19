@@ -54,7 +54,7 @@ with any tests you deem necessary to ensure quality and reliability.
 **Listing Invoices**
 
 Lists invoices sorted by due_date in descending order by default.
-```
+```shell
 GET /api/invoices
 
 Accepts the following filtering parameters:
@@ -65,6 +65,29 @@ Accepts the following filtering parameters:
 - order_dir: string (optional. Default: desc). One of asc or desc.
 
 Returns a paginated JSON response of invoices along with the related client.
+{
+  data: Array<InvoiceObject>
+  current_page: integer,
+  next_page_url: ?string,
+  prev_page_url: ?string,
+  path: string,
+  per_page: integer,
+  to: integer,
+  total: integer,
+}
+
+InvoiceObject: {
+  id: integer,
+  client: ClientObject,
+  amount: integer,
+  status: string,
+  due_date: string,
+}
+
+ClientObject: {
+  id: integer,
+  name: string,
+}
 ```
 
 ### Commands

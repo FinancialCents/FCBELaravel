@@ -5,7 +5,7 @@ The billing API provides a single endpoint to access invoices given a user ID.
 Base URL: `https://mock-billing-api.financial-cents.com`
 
 **List Invoices**
-```
+```shell
 GET /api/v1/user/{user_id}/invoices
 
 Parameters: 
@@ -19,11 +19,24 @@ Response: JSON. Paginated list of invoices in the following format:
   path: string,
   per_page: integer,
   to: integer,
-  total: 100,
-  data: Array<{id: integer, user: UserObject, client_name: string, due_date: Date, status: string, amount: integer}>
+  total: integer,
+  data: Array<Invoice>
 }
 
-UserObject: {id: integer, name: string, email: string}
+Invoice: {
+  id: integer,
+  user: UserObject,
+  client_name: string,
+  due_date: string,
+  status: string,
+  amount: integer
+}
+
+UserObject: {
+  id: integer,
+  name: string,
+  email: string
+}
 ```
 Note: `amount` is in cents so 100 = $1 USD.
 
