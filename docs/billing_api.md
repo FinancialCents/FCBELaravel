@@ -6,10 +6,10 @@ Base URL: `https://mock-billing-api.financial-cents.com`
 
 **List Invoices**
 ```shell
-GET /api/v1/user/{user_id}/invoices
+GET /api/v1/users/{user_id}/invoices
 
 Parameters: 
- - {user_id}: integer, see below for more info
+ - {user_id}: integer. See below for more info on how to obtain a user ID.
 Query: none
 Response: JSON. Paginated list of invoices in the following format:
 {
