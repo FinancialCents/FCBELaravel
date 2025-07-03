@@ -39,6 +39,7 @@ UserObject: {
 }
 ```
 Note: `amount` is in cents so 100 = $1 USD.
+
 Note: `client_name, user_id` are a unique combination.
 
 ## Authentication
