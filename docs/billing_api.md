@@ -40,7 +40,7 @@ UserObject: {
 ```
 Note: `amount` is in cents so 100 = $1 USD.
 
-Note: `client_name, user_id` are a unique combination.
+Note: `client_name, user_id` is a unique combination.
 
 ## Authentication
 For the purposes of this test, we will not be using any type of authentication.
